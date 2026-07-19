@@ -2,34 +2,213 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Sodal — a private circle.">
+<meta name="description" content="Sodal — by invitation.">
+<meta name="theme-color" content="#0C0E0D">
 <title>Sodal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%230C0E0D'/%3E%3Ctext%20x='16'%20y='23'%20font-family='Georgia,serif'%20font-size='22'%20fill='%23A8875A'%20text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+
 <style>
-  :root { --bg:#F6F4EF; --tx:#1C1E1C; --tx2:#9A9E95; --bronze:#8A6D42; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#0C0E0D; --tx:#F2F0EA; --tx2:#6E736D; --bronze:#A8875A; }
+  :root{
+    --ink:#0C0E0D;     /* ledger ink */
+    --paper:#F2F0EA;   /* wordmark */
+    --mut:#6E736D;     /* quiet text */
+    --bronze:#A8875A;  /* the L, the line, recognition */
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html,body { height:100%; }
-  body {
-    background:var(--bg); color:var(--tx);
-    font-family:Georgia,"New York",serif;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:26px; text-align:center; padding:24px;
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; background:var(--ink); }
+  body{
+    overflow:hidden;
+    color:var(--paper);
+    font-family:Georgia,"Times New Roman",serif;
+    -webkit-font-smoothing:antialiased;
   }
-  .mark { font-size:44px; letter-spacing:0.34em; text-indent:0.34em; font-weight:400; }
-  .mark b { color:var(--bronze); font-weight:400; }
-  .rule { width:44px; height:1px; background:var(--bronze); opacity:0.55; }
-  .line { font-family:-apple-system,"SF Pro Text",Segoe UI,sans-serif; font-size:14px; color:var(--tx2); letter-spacing:0.08em; }
-  footer { position:fixed; bottom:22px; font-family:-apple-system,sans-serif; font-size:11px; color:var(--tx2); letter-spacing:0.14em; opacity:0.7; }
+
+  /* ——— full-bleed layers: a CSS floor, the film, and the still that stands in for it ——— */
+  #linefloor,#film,#still{
+    position:fixed; inset:0;
+    width:100%; height:100%;
+    object-fit:cover; object-position:center;   /* the bronze line stays at vertical centre on every viewport */
+  }
+  /* the ultimate floor: a CSS rendition of the bronze line. Shows only if BOTH the film
+     and the still image fail to load — the page is then still on-brand, never blank. */
+  #linefloor{
+    z-index:0;
+    background:
+      radial-gradient(ellipse 52% 3px at 50% 50%, rgba(168,135,90,0.95), rgba(168,135,90,0) 78%),
+      radial-gradient(ellipse 94% 1.5px at 50% 50%, rgba(168,135,90,0.5), rgba(168,135,90,0) 82%),
+      var(--ink);
+  }
+  #film{ z-index:1; background:var(--ink); transition:opacity .6s ease; }
+  #film.hide{ opacity:0; }
+  #still{ z-index:2; background:transparent; opacity:0; transition:opacity .8s ease; }
+  #still.show{ opacity:1; }
+
+  /* ——— the type, anchored to the centreline where the bronze line rests ——— */
+  .stage{ position:fixed; inset:0; z-index:3; pointer-events:none; }
+  .mark,.byline,.recog,footer{
+    position:absolute; left:0; right:0; text-align:center;
+    opacity:0; transition:opacity 1s ease;
+  }
+  .mark.in,.byline.in,.recog.in,footer.in{ opacity:1; }
+
+  .mark{
+    top:50%; transform:translateY(calc(-100% - 44px));
+    font-size:clamp(38px,7vw,52px);
+    letter-spacing:0.34em; text-indent:0.34em; font-weight:400;
+    text-shadow:0 2px 44px rgba(0,0,0,0.65);
+  }
+  .mark b{ color:var(--bronze); font-weight:400; }
+
+  .byline{
+    top:50%; transform:translateY(40px);
+    font-family:-apple-system,"SF Pro Text",Segoe UI,Roboto,sans-serif;
+    font-size:13.5px; letter-spacing:0.08em; color:var(--mut);
+    text-shadow:0 1px 30px rgba(0,0,0,0.7);
+  }
+
+  /* recognition — one honest extra line, only for a remembered device */
+  .recog{
+    top:50%; transform:translateY(74px);
+    font-family:-apple-system,"SF Pro Text",Segoe UI,Roboto,sans-serif;
+    font-size:12.5px; letter-spacing:0.06em; color:var(--bronze);
+    text-shadow:0 1px 30px rgba(0,0,0,0.7);
+  }
+
+  footer{
+    top:auto; bottom:calc(22px + env(safe-area-inset-bottom, 0px));
+    font-family:-apple-system,sans-serif; font-size:11px;
+    color:var(--mut); letter-spacing:0.14em;
+  }
+
+  /* reduced motion: no film ever, the still stands, the wordmark breathes in */
+  @media (prefers-reduced-motion: reduce){
+    #film{ display:none; }
+    #still{ opacity:1; }
+  }
 </style>
+<noscript>
+  <style>
+    /* JS off → no timed reveal is possible, so show the honest floor: still + type */
+    #film{ display:none !important; }
+    #still{ opacity:1 !important; }
+    .mark,.byline,footer{ opacity:1 !important; }
+  </style>
+</noscript>
 </head>
 <body>
-  <div class="mark">SODA<b>L</b></div>
-  <div class="rule"></div>
-  <div class="line">By invitation.</div>
-  <footer>MMXXVI</footer>
+  <!-- floor: pure-CSS bronze line, shows only if both film and still fail to load -->
+  <div id="linefloor" aria-hidden="true"></div>
+  <!-- film: sources injected by JS only on the motion path (no wasted fetch on reduced-motion / no-JS) -->
+  <video id="film" poster="poster-black.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
+  <!-- still: stands in for the film; if it too fails, it hides itself so the CSS floor shows through -->
+  <img id="still" src="line-still.jpg" alt="" aria-hidden="true" onerror="this.style.display='none'">
+
+  <div class="stage">
+    <div class="mark"   id="mark">SODA<b>L</b></div>
+    <div class="byline" id="byline">By invitation.</div>
+    <div class="recog"  id="recog">The door is open for this device.</div>
+    <footer id="foot">MMXXVI</footer>
+  </div>
+
+<script>
+(function(){
+  var mark   = document.getElementById('mark'),
+      byline = document.getElementById('byline'),
+      recog  = document.getElementById('recog'),
+      foot   = document.getElementById('foot'),
+      film   = document.getElementById('film'),
+      still  = document.getElementById('still');
+
+  /* ——— Recognition v1: capture an invite token, remember the device, clean the URL ———
+     Link form: https://sodal.one/#k=<token>  (token = base64url, 16–128 chars).
+     No backend. The door LEADS nowhere yet — the recognized line only states the
+     honest truth: this device is remembered. No counts, no names, nothing staged.
+     The token is only stored + used to toggle a class; it is never written to the DOM. */
+  var token = null;
+  try{
+    var m = (location.hash || '').match(/[#&]k=([A-Za-z0-9_-]{16,128})(?:&|$)/);
+    if(m){ token = m[1]; }
+  }catch(e){}
+  if(token){
+    /* isolate the two side-effects: a storage failure must not block the URL cleanup */
+    try{ localStorage.setItem('sodal_member', token); }catch(e){}
+    try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+  }
+
+  var recognized = false;
+  try{ recognized = !!localStorage.getItem('sodal_member'); }catch(e){}
+
+  /* ——— the reveal: wordmark, then byline + year, then (if remembered) the one extra line ——— */
+  function revealType(){
+    mark.classList.add('in');
+    setTimeout(function(){ byline.classList.add('in'); foot.classList.add('in'); }, 700);
+    if(recognized){ setTimeout(function(){ recog.classList.add('in'); }, 1500); }
+  }
+
+  var revealed = false, started = false, bailed = false, revealTimer = null;
+  function doReveal(){ if(!revealed){ revealed = true; revealType(); } }
+
+  function toStill(){
+    still.classList.add('show');
+    film.classList.add('hide');
+  }
+
+  /* fall to the completed still (autoplay blocked, load error, or a slow-net stall);
+     pause the film so a late autoplay can't keep decoding invisibly behind the still */
+  function bail(){
+    if(bailed) return; bailed = true;
+    try{ film.pause(); }catch(e){}
+    toStill();
+    clearTimeout(revealTimer);
+    if(!revealed){ setTimeout(doReveal, 150); }
+  }
+
+  var reduce = false;
+  try{ reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+  /* reduced motion → skip the film entirely, gently bring the wordmark up over the still */
+  if(reduce){
+    toStill();
+    setTimeout(revealType, 250);
+    return;
+  }
+
+  /* wordmark emerges as the line settles into its held stillness (~5.4s, tuned by eye).
+     This timer is unconditional, so the wordmark ALWAYS arrives — the page can never
+     get stuck on black, whatever the film does. */
+  revealTimer = setTimeout(doReveal, 5400);
+
+  film.addEventListener('timeupdate', function(){ if(film.currentTime > 0.05) started = true; });
+  film.addEventListener('playing',    function(){ started = true; });
+  film.addEventListener('error',      bail, true);
+
+  /* inject sources + attempt playback (only reached on the motion path) */
+  try{
+    var w = document.createElement('source'); w.src = 'line.webm'; w.type = 'video/webm';
+    var h = document.createElement('source'); h.src = 'line.mp4';  h.type = 'video/mp4';
+    film.appendChild(w); film.appendChild(h);
+    film.load();
+    var p = film.play();
+    if(p && p.catch){ p.catch(function(){ /* blocked — watchdog will handle */ }); }
+  }catch(e){ bail(); }
+
+  /* start watchdog: never advanced within 2s (autoplay blocked / immediate stall) → still */
+  setTimeout(function(){ if(!started){ bail(); } }, 2000);
+
+  /* progress watchdog: started but then stalled on a slow network (no progress for ~3s
+     and not finished) → resolve to the completed still rather than a frozen half-line */
+  var lastT = 0, stalls = 0;
+  var monitor = setInterval(function(){
+    if(bailed || film.ended){ clearInterval(monitor); return; }
+    if(started){
+      if(film.currentTime <= lastT + 0.01){ if(++stalls >= 3){ clearInterval(monitor); bail(); } }
+      else { stalls = 0; }
+      lastT = film.currentTime;
+    }
+  }, 1000);
+})();
+</script>
 </body>
 </html>
