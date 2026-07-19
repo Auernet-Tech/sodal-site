@@ -103,7 +103,7 @@
   <!-- film: sources injected by JS only on the motion path (no wasted fetch on reduced-motion / no-JS) -->
   <video id="film" poster="poster-black.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
   <!-- still: stands in for the film; if it too fails, it hides itself so the CSS floor shows through -->
-  <img id="still" src="line-still.jpg" alt="" aria-hidden="true" onerror="this.style.display='none'">
+  <img id="still" src="line2-still.jpg" alt="" aria-hidden="true" onerror="this.style.display='none'">
 
   <div class="stage">
     <div class="mark"   id="mark">SODA<b>L</b></div>
@@ -186,8 +186,8 @@
 
   /* inject sources + attempt playback (only reached on the motion path) */
   try{
-    var w = document.createElement('source'); w.src = 'line.webm'; w.type = 'video/webm';
-    var h = document.createElement('source'); h.src = 'line.mp4';  h.type = 'video/mp4';
+    var w = document.createElement('source'); w.src = 'line2.webm'; w.type = 'video/webm';
+    var h = document.createElement('source'); h.src = 'line2.mp4';  h.type = 'video/mp4';
     film.appendChild(w); film.appendChild(h);
     film.load();
     var p = film.play();
