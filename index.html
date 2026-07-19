@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Sodal — a private circle.">
+<title>Sodal</title>
+<style>
+  :root { --bg:#F6F4EF; --tx:#1C1E1C; --tx2:#9A9E95; --bronze:#8A6D42; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0C0E0D; --tx:#F2F0EA; --tx2:#6E736D; --bronze:#A8875A; }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; }
+  body {
+    background:var(--bg); color:var(--tx);
+    font-family:Georgia,"New York",serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:26px; text-align:center; padding:24px;
+  }
+  .mark { font-size:44px; letter-spacing:0.34em; text-indent:0.34em; font-weight:400; }
+  .mark b { color:var(--bronze); font-weight:400; }
+  .rule { width:44px; height:1px; background:var(--bronze); opacity:0.55; }
+  .line { font-family:-apple-system,"SF Pro Text",Segoe UI,sans-serif; font-size:14px; color:var(--tx2); letter-spacing:0.08em; }
+  footer { position:fixed; bottom:22px; font-family:-apple-system,sans-serif; font-size:11px; color:var(--tx2); letter-spacing:0.14em; opacity:0.7; }
+</style>
+</head>
+<body>
+  <div class="mark">SODA<b>L</b></div>
+  <div class="rule"></div>
+  <div class="line">By invitation.</div>
+  <footer>MMXXVI</footer>
+</body>
+</html>
