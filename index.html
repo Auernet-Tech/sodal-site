@@ -62,15 +62,15 @@
   .mark b{ color:var(--bronze); font-weight:400; }
 
   .byline{
-    top:50%; transform:translateY(40px);
+    top:50%; transform:translateY(96px);
     font-family:-apple-system,"SF Pro Text",Segoe UI,Roboto,sans-serif;
-    font-size:13.5px; letter-spacing:0.08em; color:var(--mut);
-    text-shadow:0 1px 30px rgba(0,0,0,0.7);
+    font-size:14px; letter-spacing:0.1em; color:rgba(242,240,234,0.62);
+    text-shadow:0 1px 24px rgba(0,0,0,0.85);
   }
 
   /* recognition — one honest extra line, only for a remembered device */
   .recog{
-    top:50%; transform:translateY(74px);
+    top:50%; transform:translateY(136px);
     font-family:-apple-system,"SF Pro Text",Segoe UI,Roboto,sans-serif;
     font-size:12.5px; letter-spacing:0.06em; color:var(--bronze);
     text-shadow:0 1px 30px rgba(0,0,0,0.7);
@@ -103,7 +103,7 @@
   <!-- film: sources injected by JS only on the motion path (no wasted fetch on reduced-motion / no-JS) -->
   <video id="film" poster="poster-black.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
   <!-- still: stands in for the film; if it too fails, it hides itself so the CSS floor shows through -->
-  <img id="still" src="line2-still.jpg" alt="" aria-hidden="true" onerror="this.style.display='none'">
+  <img id="still" src="line3-still.jpg" alt="" aria-hidden="true" onerror="this.style.display='none'">
 
   <div class="stage">
     <div class="mark"   id="mark">SODA<b>L</b></div>
@@ -180,7 +180,13 @@
      get stuck on black, whatever the film does. */
   revealTimer = setTimeout(doReveal, 5400);
 
-  film.addEventListener('timeupdate', function(){ if(film.currentTime > 0.05) started = true; });
+  film.addEventListener('timeupdate', function(){
+    if(film.currentTime > 0.05) started = true;
+    /* the resting state belongs to the pristine still, not the compressed film:
+       as the motion finishes, cross-fade to the clean image — grain-free forever */
+    if(film.currentTime > 7.1 && !bailed){ toStill(); }
+  });
+  film.addEventListener('ended', function(){ if(!bailed){ toStill(); } });
   film.addEventListener('playing',    function(){ started = true; });
   film.addEventListener('error',      bail, true);
 
